@@ -1,0 +1,23 @@
+# ===== Java compilado =====
+*.class
+*.jar
+*.war
+*.ear
+*.log
+
+# ===== Carpetas de salida =====
+out/
+target/
+build/
+bin/
+
+# ===== IntelliJ IDEA =====
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ===== Sistema operativo =====
+.DS_Store
+Thumbs.db
+desktop.ini
