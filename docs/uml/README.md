@@ -35,6 +35,3 @@ Los nombres de clases, campos y firmas se contrastaron con los archivos Java pre
 - Strategy: [`feature/strategy-ataque`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/tree/b3ab472c2fefe40179c546db3d127d46af649c75/src/strategy), revisión `b3ab472`.
 - Observer: [`feature/observer-alerta`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/tree/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer), revisión `1d56312`.
 
-**Importante:** al preparar estos diagramas, las ramas anteriores aún no estaban integradas en `main`. Antes de cerrar la actividad o publicarlos en el README raíz, comparar nuevamente los UML con las firmas Java definitivas. Coordinar su integración con la tarea [EST-13 (#21)](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/issues/21) para evitar duplicar diagramas.
-
-Los archivos `.puml` son editables en PlantUML. Los `.svg` son imágenes vectoriales listas para insertarse en Markdown o diapositivas.
