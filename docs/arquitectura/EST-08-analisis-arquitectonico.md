@@ -5,7 +5,7 @@
 **Rol:** teoría y análisis de arquitectura; no implica implementación en Java  
 **Tarea GitHub:** [EST-08, issue #8](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/issues/8)
 
-> **Alcance de la verificación:** este documento analiza el código existente en las ramas `feature/strategy-ataque` (revisión `b3ab472`) y `feature/observer-alerta` (revisión `1d56312`). No supone que ambas ramas estén integradas en `main` ni que los ejemplos de diseño rígido sean código real del equipo.
+> **Alcance de la verificación:** este documento analiza el código existente en las ramas `feature/strategy-ataque` (revisión `b3ab472`) y `feature/observer-alerta` (revisión `1d56312`).
 
 ## 1. Problema arquitectónico y decisión de diseño
 
@@ -153,14 +153,6 @@ El informe se basa en estas clases del repositorio, consultadas en sus ramas de 
 - [`TorreDeVigilancia.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer/TorreDeVigilancia.java), [`Jugador.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer/Jugador.java), [interfaces del paquete](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/tree/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer).
 - [Diagramas de EST-07, PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34), usados como referencia arquitectónica; la integración a `main` aún debe coordinarse con el equipo.
 
-**Comprobación de la tarea EST-08:**
-
-- [x] Comparación entre estructura rígida hipotética y cada patrón.
-- [x] Identificación de abstracciones y clases concretas verificadas.
-- [x] Justificación técnica de OCP, DIP y consecuencias para mantenimiento.
-- [x] Dos aplicaciones empresariales realistas relacionadas explícitamente con el RPG.
-- [x] Material de diapositivas y guion complementario en el mismo Pull Request.
-- [ ] Revalidar los nombres y firmas si cambian las ramas Java antes del merge definitivo.
 
 ## 7. Fuentes consultadas
 
