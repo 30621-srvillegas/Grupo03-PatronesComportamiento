@@ -1,0 +1,41 @@
+@startuml
+title RPG — Patrón Strategy (EST-07)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F8FAFC
+skinparam classBorderColor #334155
+skinparam ArrowColor #334155
+hide circle
+
+interface IEstrategiaAtaque {
+  +atacar(nombreAtacante: String): void
+}
+class Personaje {
+  -nombre: String
+  -arma: IEstrategiaAtaque
+  +Personaje(nombre: String, armaInicial: IEstrategiaAtaque)
+  +setArma(nuevaArma: IEstrategiaAtaque): void
+  +atacar(): void
+  +getNombre(): String
+}
+class AtaqueEspada {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueFuego {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueHielo {
+  +atacar(nombreAtacante: String): void
+}
+
+Personaje "1" --> "1" IEstrategiaAtaque : arma
+AtaqueEspada ..|> IEstrategiaAtaque
+AtaqueFuego ..|> IEstrategiaAtaque
+AtaqueHielo ..|> IEstrategiaAtaque
+
+note bottom of Personaje
+  Contexto: delega atacar() a arma.atacar(nombre).
+  setArma() sustituye la estrategia en ejecución.
+end note
+@enduml
