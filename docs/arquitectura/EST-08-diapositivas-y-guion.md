@@ -4,7 +4,6 @@
 **Material base:** [Análisis arquitectónico completo](EST-08-analisis-arquitectonico.md)  
 **Diagramas:** [EST-07, PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34)
 
-> Las siguientes seis diapositivas son **contenido listo para incorporar a la presentación**; los guiones no son texto que deba leerse íntegramente en pantalla. Las clases mencionadas están verificadas en las ramas de Strategy y Observer, no todavía en `main`.
 
 ## Diapositiva 1 — ¿Qué problema arquitectónico resolvemos?
 
@@ -89,10 +88,3 @@
 **¿Se demuestra arquitectura distribuida?** No. La simulación es Java en un único proceso; el patrón Observer se podría adaptar a mensajería entre servicios, pero eso requeriría infraestructura adicional.
 
 **¿Puede modificarse todo sin tocar ninguna clase existente?** No. OCP se aplica al núcleo diseñado para ser extensible bajo cambios previstos; ampliar contratos o cambiar requisitos puede exigir modificar código.
-
-## Revisión final con compañeros
-
-- Insertar los SVG definitivos de EST-07 en la presentación.
-- Verificar que las clases y firmas sigan iguales luego de fusionar las ramas de desarrollo.
-- Alinear el ejemplo de la demostración con el guion.
-- Coordinar con quien explica teoría y quien ejecuta Java para evitar duplicidad.
