@@ -1,0 +1,45 @@
+@startuml
+title RPG — Patrón Observer (EST-07)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F8FAFC
+skinparam classBorderColor #334155
+skinparam ArrowColor #334155
+hide circle
+
+interface ISujeto {
+  +suscribir(observador: IObservador): void
+  +desuscribir(observador: IObservador): void
+  +notificar(): void
+}
+interface IObservador {
+  +actualizar(): void
+}
+class TorreDeVigilancia {
+  -observadores: List<IObservador>
+  +suscribir(observador: IObservador): void
+  +desuscribir(observador: IObservador): void
+  +notificar(): void
+  +detectarEnemigo(): void
+}
+class Jugador {
+  -nombre: String
+  +Jugador(nombre: String)
+  +getNombre(): String
+  +actualizar(): void
+  +activarEscudo(): void
+}
+TorreDeVigilancia ..|> ISujeto
+Jugador ..|> IObservador
+ISujeto ..> IObservador : parámetros de suscribir/desuscribir
+TorreDeVigilancia "1" o--> "0..*" IObservador : observadores
+
+note bottom of TorreDeVigilancia
+  detectarEnemigo() llama notificar();
+  notificar() recorre observadores y llama actualizar().
+end note
+note bottom of Jugador
+  actualizar() llama activarEscudo().
+end note
+@enduml
