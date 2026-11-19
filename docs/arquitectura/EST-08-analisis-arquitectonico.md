@@ -5,7 +5,7 @@
 **Rol:** teoría y análisis de arquitectura; no implica implementación en Java  
 **Tarea GitHub:** [EST-08, issue #8](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/issues/8)
 
-> **Alcance de la verificación:** este documento analiza el código existente en las ramas `feature/strategy-ataque` (revisión `b3ab472`) y `feature/observer-alerta` (revisión `1d56312`).
+> **Alcance de la verificación actualizado (19-11-2026):** se revisó el proyecto **integrado en `main`, commit `b66dbd3c9659dc4188bf502ef1b2c149dfb15541`**: `Principal.java`, los cinco archivos Java de `strategy` y los cuatro de `observer`. Las implementaciones de los patrones mantienen las mismas firmas principales; el cambio arquitectónico relevante respecto al primer análisis es el **cliente integrador `Principal`**, con menú interactivo, registros y selección de estrategias. Los ejemplos rígidos siguen siendo hipotéticos.
 
 ## 1. Problema arquitectónico y decisión de diseño
 
@@ -39,10 +39,12 @@ Personaje.atacar():
 | `AtaqueEspada`, `AtaqueFuego`, `AtaqueHielo` | Estrategias concretas | Implementan la interfaz y muestran comportamientos distintos de ataque en consola. |
 | `Personaje` | Contexto | Guarda `arma: IEstrategiaAtaque`, recibe una estrategia inicial por constructor, permite sustituirla con `setArma(IEstrategiaAtaque)` y delega `atacar()`. |
 
+En el programa final, `Principal` crea `AtaqueEspada`, `AtaqueFuego` y `AtaqueHielo`, las registra en `armasDisponibles: Map<Integer, IEstrategiaAtaque>` y crea `Personaje("Arthas", armasDisponibles.get(1))`. El menú se despacha mediante `acciones: Map<Integer, Runnable>` y `acciones.getOrDefault(opcion, ...).run()`; no utiliza una cadena de condicionales para ejecutar acciones del menú. El método `cambiarArma()` consulta el mapa, verifica `armaElegida == null` y llama `personaje.setArma(armaElegida)`. **La elección y creación de estrategias concretas sí está en `Principal`: el núcleo `Personaje` permanece desacoplado, pero el cliente integrador conoce los tres tipos de ataque.**
+
 La interacción efectiva es:
 
 ```text
-Cliente elige y entrega un objeto de estrategia
+Principal consulta armasDisponibles y obtiene la IEstrategiaAtaque seleccionada
   → Personaje.setArma(nuevaArma)
   → Personaje.atacar()
   → arma.atacar(nombre)
@@ -63,9 +65,9 @@ En `Personaje.atacar()`, el código real es `arma.atacar(nombre);`. La decisión
 
 ### 2.4 Justificación SOLID
 
-**OCP — Abierto/Cerrado.** `Personaje` está abierto a **extensión del comportamiento** mediante nuevas implementaciones de `IEstrategiaAtaque` y puede permanecer sin modificaciones al incorporarlas. No significa que toda la aplicación sea inmutable: el menú, la fábrica o la composición que decide qué estrategia crear podría requerir un cambio.
+**OCP — Abierto/Cerrado.** `Personaje` está abierto a **extensión del comportamiento** mediante nuevas implementaciones de `IEstrategiaAtaque` y puede permanecer sin modificaciones al incorporarlas. Esto se verifica **en el núcleo Strategy**, no en todo el proyecto: para ofrecer una cuarta arma por el menú actual sí habría que incorporarla a la inicialización de `armasDisponibles` en `Principal` (u otro componente de composición). La extensión no modifica `Personaje.atacar()`, pero no es completamente automática.
 
-**DIP — Inversión de Dependencias.** La política de delegación del personaje no depende de `AtaqueFuego`, `AtaqueHielo` ni `AtaqueEspada`, sino de `IEstrategiaAtaque`. Las clases concretas también dependen del contrato al implementarlo. La inyección de estrategia por constructor y por `setArma()` facilita sustituir implementaciones; **la inyección es un mecanismo, mientras DIP es un principio de diseño**.
+**DIP — Inversión de Dependencias.** La política de delegación del personaje no depende de `AtaqueFuego`, `AtaqueHielo` ni `AtaqueEspada`, sino de `IEstrategiaAtaque`. Las clases concretas también dependen del contrato al implementarlo. La inyección de estrategia por constructor y por `setArma()` facilita sustituir implementaciones; **la inyección es un mecanismo, mientras DIP es un principio de diseño**. `Principal` depende también de las implementaciones concretas al crearlas: es un cliente de composición y no debe describirse como completamente desacoplado.
 
 **Mantenimiento:** un cambio en el texto o efecto de `AtaqueFuego` debe localizarse en esa estrategia. La incorporación de otra variante reduce la necesidad de tocar el contexto estable. Cada estrategia nueva, sin embargo, incorpora una clase que debe probarse y mantenerse.
 
@@ -90,10 +92,12 @@ Este enfoque puede funcionar en un caso mínimo, pero se vuelve difícil de exte
 | `TorreDeVigilancia` | Sujeto concreto | Implementa `ISujeto`, mantiene `List<IObservador>`, añade y retira observadores, ejecuta `notificar()`. |
 | `Jugador` | Observador concreto | Implementa `IObservador`; `actualizar()` llama a `activarEscudo()`. |
 
+En la versión integrada, `Principal` mantiene `torre: TorreDeVigilancia` y `jugadoresSuscritos: List<Jugador>`. Su método `suscribirJugador()` lee un nombre, crea `new Jugador(nombre)`, ejecuta `torre.suscribir(jugador)` y agrega esa misma referencia a la lista local; `desuscribirJugador()` selecciona un índice, retira la referencia local y llama `torre.desuscribir(jugador)`; `detectarEnemigo()` delega a la torre. Esa **lista auxiliar de `Principal` no es la lista interna `List<IObservador>` de la torre**: son dos colecciones distintas con propósitos diferentes.
+
 La secuencia del código existente es:
 
 ```text
-Se registran jugadores mediante torre.suscribir(jugador)
+Principal crea Jugador y lo registra mediante torre.suscribir(jugador)
   → torre.detectarEnemigo()
   → torre.notificar()
   → por cada IObservador: observador.actualizar()
@@ -117,7 +121,7 @@ Se registran jugadores mediante torre.suscribir(jugador)
 
 **OCP — Abierto/Cerrado.** Para registrar un nuevo tipo de destinatario que implemente `IObservador`, la lógica de `TorreDeVigilancia.notificar()` no necesita cambiar. El nuevo observador define su propia reacción. El evento que actualmente se notifica es una alerta genérica sin datos adicionales; **si se necesita información nueva sobre el enemigo**, puede ser necesario evolucionar el contrato y sus consumidores.
 
-**DIP — Inversión de Dependencias.** `TorreDeVigilancia` gestiona una lista de la abstracción `IObservador`, no una lista de `Jugador`. `ISujeto` utiliza también el contrato `IObservador` para administrar suscripciones. Así el emisor no depende de las implementaciones de respuesta.
+**DIP — Inversión de Dependencias.** `TorreDeVigilancia` gestiona una lista de la abstracción `IObservador`, no una lista de `Jugador`. `ISujeto` utiliza también el contrato `IObservador` para administrar suscripciones. Así el emisor no depende de las implementaciones de respuesta. La capa de demostración `Principal`, sin embargo, **sí** usa el tipo concreto `Jugador` para crearlo y seleccionarlo por índice: no corresponde atribuirle el mismo nivel de desacoplamiento que a `TorreDeVigilancia`.
 
 **Mantenimiento:** las reacciones de los observadores quedan localizadas en sus clases; se pueden ensayar la suscripción, desuscripción y fan-out sin mezclar las responsabilidades de la torre con la activación concreta del escudo.
 
@@ -127,7 +131,36 @@ En un sistema comercial, un módulo de pedidos puede publicar cambios de estado 
 
 Se trata de una **analogía arquitectónica**. El proyecto Java del grupo implementa notificaciones **en memoria, síncronas y locales al mismo proceso**; no demuestra mensajería distribuida, entrega remota, persistencia, colas ni tolerancia a fallos. Un sistema entre servicios necesita otros mecanismos adicionales.
 
-## 4. OCP y DIP: síntesis transversal
+## 4. Arquitectura final integrada: responsabilidades de Principal y condicionales reales
+
+La clase `Principal` completa las dos demostraciones en un único proceso Java por consola. Su estructura, ausente en el análisis inicial, explica cómo se **componen** los patrones:
+
+| Campo o método de `Principal` | Función implementada | Consecuencia arquitectónica |
+| --- | --- | --- |
+| `Map<Integer, IEstrategiaAtaque> armasDisponibles` | Registra las tres instancias de ataque por número. | Permite selección por datos; `Principal` conoce los tipos concretos que instancia. |
+| `Map<Integer, Runnable> acciones` | Relaciona opciones 1–5 con referencias a métodos y ejecuta `getOrDefault(...).run()`. | Sustituye un despacho central rígido por una tabla de acciones; **esto no es una tercera implementación del patrón Strategy**. |
+| `Personaje personaje` | Recibe inicialmente `AtaqueEspada`; después admite `setArma()`. | Cliente → contexto → interfaz → estrategia concreta. |
+| `TorreDeVigilancia torre` | Ejecuta `suscribir()`, `desuscribir()` y `detectarEnemigo()`. | Cliente concreto de la torre; la torre mantiene su propio contrato con observadores. |
+| `List<Jugador> jugadoresSuscritos` | Permite mostrar y seleccionar jugadores por índice en el menú. | Acoplamiento del menú a `Jugador`; no sustituye `List<IObservador>` dentro de la torre. |
+| `leerEntero()`, `leerTexto()` | Validan entradas de consola. | Mantienen condicionales y bucles **legítimos** ajenos a los algoritmos de ataque o al envío de notificaciones. |
+
+### Condicionales y despacho: distinción verificable
+
+- **No hay `switch` ni cadena de `if-else` por tipo de arma en `Personaje.atacar()`**: usa polimorfismo mediante `arma.atacar(nombre)`.
+- **No hay un `switch` principal para las opciones del menú**: `Principal` usa `Map<Integer, Runnable>` y `getOrDefault`, registrando referencias a métodos como `personaje::atacar` y `this::detectarEnemigo`.
+- **Sí hay condiciones reales**, por ejemplo `if (armaElegida == null)` para validar un arma, `if (jugadoresSuscritos.isEmpty())` para impedir desuscripciones imposibles, comprobación de índices, `if (opcion != OPCION_SALIR)` y `try/catch` al leer enteros.
+- **Observer también contiene condiciones y un bucle intencionales:** la torre comprueba `!observadores.contains(observador)` antes de añadir y usa `for` para notificar a cada observador. El patrón no elimina la necesidad de control de flujo.
+- `acciones` evita condicionales de despacho; es una elección adicional de diseño basada en funciones `Runnable`, no el objetivo principal del patrón Observer ni una afirmación de que todo el programa es libre de condiciones.
+
+### Recorrido real demostrable
+
+**Strategy:** opción **1** → `personaje.atacar()` con espada; opción **2** → consulta del mapa y `personaje.setArma(armaElegida)`; opción **1** nuevamente → misma operación del personaje, distinta estrategia activa.
+
+**Observer:** opción **3** → `new Jugador(nombre)` y `torre.suscribir(jugador)`; opción **5** → `detectarEnemigo()` → `notificar()` → `Jugador.actualizar()` → `activarEscudo()`; opción **4** → `desuscribirJugador()` y `torre.desuscribir(jugador)`; siguiente detección → ese jugador ya no es notificado.
+
+**Límites técnicos:** las notificaciones son síncronas, en memoria y del mismo proceso, no mensajes distribuidos. `actualizar()` no recibe información del enemigo; la torre notifica secuencialmente. La extensión OCP/DIP se verifica principalmente en `Personaje` y `TorreDeVigilancia`; `Principal` es un cliente que conoce clases concretas.
+
+## 5. OCP y DIP: síntesis transversal
 
 | Principio | Strategy: evidencia del RPG | Observer: evidencia del RPG | Beneficio |
 | --- | --- | --- | --- |
@@ -136,7 +169,7 @@ Se trata de una **analogía arquitectónica**. El proyecto Java del grupo implem
 
 **Relación con otros SOLID, de forma complementaria:** SRP se favorece al separar el ataque, la gestión del personaje, la detección de eventos y la reacción del jugador. LSP requiere que cada estrategia u observador cumpla el contrato que ofrece; implementar una interfaz no prueba por sí solo toda la sustitución conductual. ISP resulta coherente con interfaces pequeñas, pero la evidencia principal solicitada para esta tarea es OCP y DIP.
 
-## 5. Consecuencias de mantenimiento y límites
+## 6. Consecuencias de mantenimiento y límites
 
 1. **Cambio localizado:** añadir un nuevo ataque se concentra en una clase de estrategia; añadir otro receptor de alertas se concentra en un observador nuevo y su registro.
 2. **Menor acoplamiento:** los contextos y emisores interactúan con contratos estables y no invocan detalles de todas las clases concretas.
@@ -145,21 +178,22 @@ Se trata de una **analogía arquitectónica**. El proyecto Java del grupo implem
 5. **Costes:** las interfaces y clases adicionales aumentan la cantidad de componentes a comprender; convienen cuando hay variación real o destinatarios dinámicos.
 6. **Límite de Observer implementado:** `actualizar()` no recibe datos del evento; `notificar()` invoca secuencialmente a los observadores en el mismo proceso. No equivale a publicación/suscripción distribuida.
 
-## 6. Evidencia de trazabilidad y control antes de integrar
+## 7. Evidencia de trazabilidad del código integrado
 
-El informe se basa en estas clases del repositorio, consultadas en sus ramas de desarrollo:
+El análisis se verificó contra la revisión `b66dbd3` de **`main`**, que contiene las interfaces, las implementaciones de ambas mecánicas y el menú interactivo. Los siguientes enlaces históricos muestran de dónde proceden originalmente las clases:
 
 - [`Personaje.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/b3ab472c2fefe40179c546db3d127d46af649c75/src/strategy/Personaje.java), [`IEstrategiaAtaque.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/b3ab472c2fefe40179c546db3d127d46af649c75/src/strategy/IEstrategiaAtaque.java), [estrategias concretas](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/tree/b3ab472c2fefe40179c546db3d127d46af649c75/src/strategy).
 - [`TorreDeVigilancia.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer/TorreDeVigilancia.java), [`Jugador.java`](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer/Jugador.java), [interfaces del paquete](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/tree/1d5631204732fba1354d06c834f53717a2bc4dc6/src/observer).
-- [Diagramas de EST-07, PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34), usados como referencia arquitectónica; la integración a `main` aún debe coordinarse con el equipo.
+- [`Principal.java` integrado](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/blob/b66dbd3c9659dc4188bf502ef1b2c149dfb15541/src/Principal.java), revisado para completar la arquitectura y las condiciones existentes.
+- [Diagramas EST-07, PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34), actualizados para incluir `Principal` y sus asociaciones.
 
 
-## 7. Fuentes consultadas
+## 8. Fuentes consultadas
 
 1. Refactoring.Guru. (s. f.). [*Strategy*](https://refactoring.guru/es/design-patterns/strategy). Definición, colaboración entre contexto y estrategias, usos y limitaciones.
 2. Refactoring.Guru. (s. f.). [*Observer*](https://refactoring.guru/es/design-patterns/observer). Suscripción, notificación y dependencia de interfaces.
 3. Refactoring.Guru. (s. f.). [*Replace Conditional with Polymorphism*](https://refactoring.guru/replace-conditional-with-polymorphism). Contexto de refactorización de condicionales.
 4. Shvets, A. (s. f.). [*Dive Into Design Patterns*, muestra en español](https://refactoring.guru/files/design-patterns-es-demo.pdf). Secciones de abierto/cerrado e inversión de dependencias.
-5. Grupo 3. (2026). *Código Java del videojuego RPG*, revisiones de ramas mencionadas en la sección 6. Repositorio GitHub del grupo.
+5. Grupo 3. (2026). *Código Java del videojuego RPG*, integración en `main` (commit `b66dbd3`), además de las revisiones de origen enumeradas en la sección 7. Repositorio GitHub del grupo.
 
 *Los contrastes rígidos, ejemplos empresariales y conclusiones de mantenimiento son análisis originales elaborados para el ejercicio; no se presentan como funcionalidades existentes del proyecto.*
