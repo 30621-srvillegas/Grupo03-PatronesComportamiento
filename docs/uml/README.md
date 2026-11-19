@@ -1,15 +1,5 @@
-# EST-07 — Diagramas UML definitivos de Strategy y Observer
+#Diagramas UML definitivos de Strategy y Observer
 
-**Responsable:** Leonardo Figueroa (`@30621-lmfigueroa1`)  
-**Rol:** Teoría y análisis arquitectónico, sin modificación de código Java.  
-**Base de validación:** `main` en commit `b66dbd3c9659dc4188bf502ef1b2c149dfb15541` (19 de noviembre de 2026).
-
-## Entregables
-
-| Patrón | Imagen vectorial para exposición / README | Fuente editable PlantUML |
-|---|---|---|
-| Strategy | [strategy.svg](strategy.svg) | [strategy.puml](strategy.puml) |
-| Observer | [observer.svg](observer.svg) | [observer.puml](observer.puml) |
 
 ## Strategy: diagrama final integrado
 
@@ -22,7 +12,6 @@ Se representan las clases implementadas: `Principal`, `Personaje`, `IEstrategiaA
 - `Principal` contiene `personaje: Personaje`, `armasDisponibles: Map<Integer, IEstrategiaAtaque>` y `acciones: Map<Integer, Runnable>`. Inicializa las tres estrategias concretas en su constructor y cambia el arma a través de `cambiarArma()` y `personaje.setArma(armaElegida)`.
 - Las líneas sólidas con navegabilidad representan las **asociaciones** de los campos, no herencia: `Principal → Personaje`, `Principal → IEstrategiaAtaque` a través de los valores del mapa y `Personaje → IEstrategiaAtaque`.
 
-La creación de `AtaqueEspada`, `AtaqueFuego` y `AtaqueHielo` por `Principal` se documenta en la nota del diagrama. El alcance es un UML de clases de la mecánica; no se representan todas las dependencias de bibliotecas Java.
 
 ## Observer: diagrama final integrado
 
@@ -36,11 +25,7 @@ Se representan `Principal`, `ISujeto`, `IObservador`, `TorreDeVigilancia` y `Jug
 - `Principal` mantiene `torre: TorreDeVigilancia` y `jugadoresSuscritos: List<Jugador>`, crea los jugadores, los suscribe o desuscribe, y llama `torre.detectarEnemigo()`.
 - Flujo comprobado: `detectarEnemigo() → notificar() → actualizar() → activarEscudo()`. La torre itera sobre una copia temporal de la lista de observadores.
 
-**Aclaración importante:** la agregación `TorreDeVigilancia → IObservador` corresponde al registro en la torre y es diferente de la asociación `Principal → Jugador`, que existe para seleccionar qué jugador desuscribir desde el menú.
-
-## Verificación frente al código Java completo
-
-Las clases y las firmas del núcleo Strategy/Observer en `main` coinciden con las utilizadas para elaborar los UML iniciales, pero el programa ahora también contiene un **menú interactivo integrado en `Principal`**, que no aparecía en los diagramas anteriores. Por ello se actualizaron las fuentes `.puml`, las imágenes `.svg` y esta explicación.
+## Verificación frente al código
 
 | Archivo Java en main | Comprobación en los UML |
 |---|---|
@@ -52,15 +37,3 @@ Las clases y las firmas del núcleo Strategy/Observer en `main` coinciden con la
 | [`observer/TorreDeVigilancia.java`](../../src/observer/TorreDeVigilancia.java) | `List<IObservador>`, suscripción, desuscripción, notificación y detección. |
 | [`observer/Jugador.java`](../../src/observer/Jugador.java) | `nombre`, constructor, `getNombre()`, `actualizar()` y `activarEscudo()`. |
 
-Los enlaces relativos a archivos `src` funcionan después de integrar este PR con `main`, ya que las ramas de documentación nacieron antes de que se incorporara el código definitivo.
-
-## Estado de la revisión
-
-- [x] Interfaces, clases concretas y métodos principales de las dos mecánicas.
-- [x] Realizaciones, asociaciones, agregación y dependencia de interfaces.
-- [x] Inclusión de `Principal` y su conexión efectiva con ambos patrones.
-- [x] Revisión de nombres y firmas contra el código integrado de `main` (`b66dbd3`).
-- [x] Exportación de dos imágenes SVG y conservación de fuentes PlantUML.
-- [ ] Integración del PR de documentación y comprobación de visualización de imágenes desde el README raíz.
-
-**Coordinación:** el README raíz de `main` ya referencia las rutas `docs/uml/strategy.svg` y `docs/uml/observer.svg`. Hasta que este PR se fusione, esas imágenes aún no estarán presentes en `main`. Revisar también la tarea [EST-13](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/issues/21) para evitar diagramas duplicados.
