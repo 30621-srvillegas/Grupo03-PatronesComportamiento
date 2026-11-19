@@ -184,3 +184,14 @@ Cada pieza se desarrollo en una rama independiente y se integro a `main` mediant
 | `docs/readme` | Documentacion del proyecto |
 
 Las tareas se gestionaron en un tablero Kanban de **GitHub Projects**.
+
+---
+
+## Presentación integrada y coordinación de exposición (EST-09)
+
+Los materiales de integración y ensayo de Leonardo están en [`docs/presentacion/`](docs/presentacion/):
+
+- [Presentación editable en Markdown/Marp](docs/presentacion/EST-09-presentacion-integrada.md), organizada por turnos para los seis integrantes.
+- [Guía de ejecución, reparto de intervenciones y ensayo](docs/presentacion/EST-09-ensayo-y-validacion.md), con lista de control para revisar el resultado final.
+
+Estos recursos consolidan los aportes de teoría de Strategy y Observer, los diagramas de EST-07 y el análisis SOLID de EST-08. Se basan en el código de `src/Principal.java` ya integrado. **Antes de exponer** se requiere confirmar la incorporación de los diagramas de [PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34), la documentación arquitectónica de [PR #35](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/35) y realizar el ensayo de los seis integrantes.
