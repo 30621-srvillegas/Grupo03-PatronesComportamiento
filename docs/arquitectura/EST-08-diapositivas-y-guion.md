@@ -1,9 +1,4 @@
-# EST-08 — Material para diapositivas y exposición
-
-**Responsable:** Leonardo Figueroa | **Grupo 3** | **Duración orientativa:** 3–4 minutos, a coordinar con el equipo  
-**Material base:** [Análisis arquitectónico completo](EST-08-analisis-arquitectonico.md)  
-**Diagramas:** [EST-07, PR #34](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/pull/34)  
-**Versión del código contrastada:** `main` en `b66dbd3` (19-11-2026), incluida `Principal.java`.
+# Material para diapositivas y exposición
 
 
 ## Diapositiva 1 — ¿Qué problema arquitectónico resolvemos?
