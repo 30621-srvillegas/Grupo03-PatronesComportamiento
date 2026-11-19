@@ -1,11 +1,4 @@
-# EST-08 — Análisis de arquitectura, condicionales y principios SOLID
-
-**Proyecto:** Grupo 3 — Patrones de comportamiento en un videojuego RPG  
-**Responsable:** Leonardo Figueroa (`@30621-lmfigueroa1`)  
-**Rol:** teoría y análisis de arquitectura; no implica implementación en Java  
-**Tarea GitHub:** [EST-08, issue #8](https://github.com/30621-srvillegas/Grupo03-PatronesComportamiento/issues/8)
-
-> **Alcance de la verificación actualizado (19-11-2026):** se revisó el proyecto **integrado en `main`, commit `b66dbd3c9659dc4188bf502ef1b2c149dfb15541`**: `Principal.java`, los cinco archivos Java de `strategy` y los cuatro de `observer`. Las implementaciones de los patrones mantienen las mismas firmas principales; el cambio arquitectónico relevante respecto al primer análisis es el **cliente integrador `Principal`**, con menú interactivo, registros y selección de estrategias. Los ejemplos rígidos siguen siendo hipotéticos.
+# Análisis de arquitectura, condicionales y principios SOLID
 
 ## 1. Problema arquitectónico y decisión de diseño
 
