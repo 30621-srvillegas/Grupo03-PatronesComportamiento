@@ -1,0 +1,60 @@
+@startuml
+title RPG - Strategy: clases e integración real (EST-07)
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam backgroundColor white
+skinparam classBackgroundColor #F8FAFC
+skinparam classBorderColor #334155
+skinparam ArrowColor #334155
+skinparam linetype ortho
+hide circle
+left to right direction
+
+class Principal <<integrador>> {
+  -armasDisponibles: Map<Integer, IEstrategiaAtaque>
+  -acciones: Map<Integer, Runnable>
+  -personaje: Personaje
+  +Principal()
+  {static} +main(args: String[]): void
+  -iniciar(): void
+  -cambiarArma(): void
+}
+class Personaje <<contexto>> {
+  -nombre: String
+  -arma: IEstrategiaAtaque
+  +Personaje(nombre: String, armaInicial: IEstrategiaAtaque)
+  +setArma(nuevaArma: IEstrategiaAtaque): void
+  +atacar(): void
+  +getNombre(): String
+}
+interface IEstrategiaAtaque {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueEspada {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueFuego {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueHielo {
+  +atacar(nombreAtacante: String): void
+}
+
+Principal "1" --> "1" Personaje : personaje
+Principal "1" --> "0..*" IEstrategiaAtaque : armasDisponibles (valores del Map)
+Personaje "1" --> "1" IEstrategiaAtaque : arma activa
+AtaqueEspada ..|> IEstrategiaAtaque
+AtaqueFuego ..|> IEstrategiaAtaque
+AtaqueHielo ..|> IEstrategiaAtaque
+
+note bottom of Principal
+  Principal crea AtaqueEspada, AtaqueFuego y AtaqueHielo.
+  Cambiar arma usa el Map, valida la selección
+  y llama personaje.setArma(armaElegida).
+  El mapa acciones usa Runnable para despachar el menú.
+end note
+note bottom of Personaje
+  atacar() delega en arma.atacar(nombre).
+  No contiene switch/if de tipos de ataque.
+end note
+@enduml
