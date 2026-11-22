@@ -54,3 +54,43 @@ Se representan `Principal`, `ISujeto`, `IObservador`, `TorreDeVigilancia` y `Jug
 | [`observer/TorreDeVigilancia.java`](../../src/observer/TorreDeVigilancia.java) | `List<IObservador>`, suscripción, desuscripción, notificación y detección. |
 | [`observer/Jugador.java`](../../src/observer/Jugador.java) | `nombre`, constructor, `getNombre()`, `actualizar()` y `activarEscudo()`. |
 
+## Diagramas de casos de uso
+
+**Alcance:** comportamiento funcional del simulador RPG por consola, contrastado con [Principal.java](../../src/Principal.java) de la revisión `d9749cb`. El actor **Usuario de consola** representa a quien introduce las opciones y datos por teclado. `Personaje`, `Jugador` y `TorreDeVigilancia` son objetos internos, no actores externos. El rectángulo delimita el sistema y los óvalos identifican casos de uso.
+
+| Vista | Imagen vectorial | Fuente editable |
+|---|---|---|
+| General | [casos-uso-general.svg](casos-uso-general.svg) | [PlantUML](casos-uso-general.puml) |
+| Strategy | [casos-uso-strategy.svg](casos-uso-strategy.svg) | [PlantUML](casos-uso-strategy.puml) |
+| Observer | [casos-uso-observer.svg](casos-uso-observer.svg) | [PlantUML](casos-uso-observer.puml) |
+
+### Vista general
+
+![Casos de uso generales](casos-uso-general.svg)
+
+### Strategy
+
+![Casos de uso Strategy](casos-uso-strategy.svg)
+
+Cambiar arma incluye la selección de una de las armas disponibles. Atacar utiliza el arma activa sin exigir que se cambie antes; la espada es la estrategia inicial. Los tres tipos de ataque son variantes del mismo comportamiento, no actores ni tres opciones independientes del menú principal.
+
+### Observer
+
+![Casos de uso Observer](casos-uso-observer.svg)
+
+Detectar enemigo incluye notificar a los observadores suscritos porque `TorreDeVigilancia.detectarEnemigo()` invoca siempre `notificar()`, incluso con una lista vacía. Cada jugador registrado ejecuta `actualizar()` y después `activarEscudo()`. La detección es iniciada manualmente en el menú; no existe un sensor ni un enemigo externo al sistema.
+
+### Trazabilidad y condiciones
+
+| ID | Caso de uso | Opción | Código relacionado | Resultado o condición |
+|---|---|---|---|---|
+| UC01 | Atacar | 1 | `personaje::atacar` → `arma.atacar(nombre)` | Muestra el ataque de la estrategia activa. |
+| UC02 | Cambiar arma | 2 | `Principal.cambiarArma()` → `Personaje.setArma()` | Sustituye la referencia al arma si es válida; si no, conserva la anterior. |
+| UC02A | Seleccionar arma disponible | Incluido en UC02 | `armasDisponibles.get(leerEntero(...))` | Presenta las tres armas (espada, fuego, hielo), lee y valida la selección. |
+| UC03 | Suscribir jugador a la torre | 3 | `Principal.suscribirJugador()` → `torre.suscribir(jugador)` | Lee un nombre no vacío, crea el jugador y lo registra. |
+| UC04 | Desuscribir jugador | 4 | `Principal.desuscribirJugador()` → `torre.desuscribir(jugador)` | Requiere al menos un jugador y un índice válido; en otro caso, informa y vuelve al menú. |
+| UC05 | Detectar enemigo | 5 | `Principal.detectarEnemigo()` → `torre.detectarEnemigo()` | Muestra la alerta e invoca la notificación. |
+| UC05A | Notificar a observadores suscritos | Incluido en UC05 | `TorreDeVigilancia.notificar()` → `IObservador.actualizar()` | Notifica de forma síncrona a todos los registrados; si no hay ninguno, no se activa ningún escudo. |
+| UC06 | Salir de la simulación | 0 | `Principal.iniciar()` / `OPCION_SALIR` | Finaliza el bucle del menú. |
+
+**Notación:** asociación mediante línea continua; `«include»` mediante flecha discontinua desde el caso base al caso incluido. Las dos vistas específicas detallan comportamientos incluidos; la vista general conserva únicamente las seis opciones directas para facilitar su lectura. No se añaden casos de inicio de sesión, persistencia, conexión de red o detección automática porque no existen en el código. Los SVG se diagramaron con texto principal de 28 px, espacios entre óvalos y formato ampliable. Las fuentes PlantUML comparten los mismos nombres y relaciones; su disposición automática puede variar.

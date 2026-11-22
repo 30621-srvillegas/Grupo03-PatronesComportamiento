@@ -82,6 +82,23 @@ Los tres SVG se pueden ampliar sin perder nitidez. [Strategy a tamaño completo]
 
 ---
 
+## Diagramas de casos de uso
+
+Los casos de uso muestran las funciones disponibles para el **usuario de consola**, el único actor externo del simulador, a diferencia de los diagramas de clases que describen su estructura interna.
+
+### Vista general
+
+![Diagrama general de casos de uso](docs/uml/casos-uso-general.svg)
+
+### Vistas específicas por patrón
+
+- [Casos de uso de Strategy](docs/uml/casos-uso-strategy.svg): atacar y cambiar arma.
+- [Casos de uso de Observer](docs/uml/casos-uso-observer.svg): suscribir, desuscribir y detectar enemigo; notificación incluida.
+
+Las imágenes SVG, las fuentes PlantUML editables y la correspondencia con las opciones de `Principal.java` se encuentran en [la documentación UML](docs/uml/README.md#diagramas-de-casos-de-uso).
+
+---
+
 ## Estructura del proyecto
 
 ```

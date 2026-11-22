@@ -1,0 +1,27 @@
+@startuml
+title Casos de uso · Observer
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 26
+skinparam actorFontSize 28
+skinparam usecaseFontSize 26
+skinparam rectangleFontSize 28
+skinparam nodesep 100
+skinparam ranksep 120
+skinparam usecaseBackgroundColor #EAF1FB
+skinparam usecaseBorderColor #334155
+skinparam ArrowColor #475569
+actor "Usuario de consola" as U
+rectangle "Simulador RPG · vista Observer" {
+  usecase "Suscribir jugador\na la torre\n(UC03 · opción 3)" as UC03
+  usecase "Desuscribir jugador\n(UC04 · opción 4)" as UC04
+  usecase "Detectar enemigo\n(UC05 · opción 5)" as UC05
+  usecase "Notificar a observadores\nsuscritos\n(UC05A)" as UC05A
+}
+U -- UC03
+U -- UC04
+U -- UC05
+UC05 ..> UC05A : <<include>>
+@enduml
