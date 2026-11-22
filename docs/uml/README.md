@@ -14,10 +14,6 @@ El UML general representa los diez tipos Java declarados en `src`: siete clases 
 
 **Legibilidad:** texto de miembros de 24 px y encabezados de 30 px en las imágenes SVG; separación amplia entre cajas, conectores diferenciados y lienzo vectorial ampliable. Las fuentes PlantUML conservan la estructura y ajustes de espaciado, aunque su distribución automática puede variar respecto a los SVG.
 
-**Notación:** `+` público, `-` privado, `{static}` miembro estático, `{readOnly}` campo final. Las multiplicidades se indican en el extremo destino: una estrategia activa, tres estrategias disponibles en el mapa inicial, una torre y cero o más jugadores/observadores. Las dependencias `«create»` representan la creación de las estrategias concretas en `Principal`. No se impone una multiplicidad inversa que el código no garantiza.
-
-**Versión contrastada:** `main`, commit `d9749cbbe9a783c0ddd7fb43623f965bfb311fe1`. Las vistas específicas muestran los miembros de `Principal` relevantes a cada patrón, mientras que la vista general incluye todos sus miembros declarados.
-
 ## Strategy: diagrama final integrado
 
 ![Diagrama UML de Strategy](strategy.svg)
@@ -93,4 +89,3 @@ Detectar enemigo incluye notificar a los observadores suscritos porque `TorreDeV
 | UC05A | Notificar a observadores suscritos | Incluido en UC05 | `TorreDeVigilancia.notificar()` → `IObservador.actualizar()` | Notifica de forma síncrona a todos los registrados; si no hay ninguno, no se activa ningún escudo. |
 | UC06 | Salir de la simulación | 0 | `Principal.iniciar()` / `OPCION_SALIR` | Finaliza el bucle del menú. |
 
-**Notación:** asociación mediante línea continua; `«include»` mediante flecha discontinua desde el caso base al caso incluido. Las dos vistas específicas detallan comportamientos incluidos; la vista general conserva únicamente las seis opciones directas para facilitar su lectura. No se añaden casos de inicio de sesión, persistencia, conexión de red o detección automática porque no existen en el código. Los SVG se diagramaron con texto principal de 28 px, espacios entre óvalos y formato ampliable. Las fuentes PlantUML comparten los mismos nombres y relaciones; su disposición automática puede variar.
