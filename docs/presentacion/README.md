@@ -3,7 +3,7 @@
 **Strategy y Observer en un videojuego RPG**  
 Aplicaciones Distribuidas · ESPE
 
-[Abrir las 15 diapositivas en Canva](https://www.canva.com/d/2aqiCwDg9mNYkJQ)
+[Abrir las 15 diapositivas en Canva]([https://www.canva.com/d/2aqiCwDg9mNYkJQ](https://canva.link/vzsypzqw5uu43wz))
 
 | Páginas | Expositor | Contenido |
 | --- | --- | --- |
