@@ -62,7 +62,13 @@ La torre solo conoce la interfaz `IObservador`, no la clase `Jugador`, por lo qu
 
 ---
 
-## Diagrama UML
+## Diagramas UML
+
+### Diagrama general del proyecto
+
+![Diagrama UML general del RPG](docs/uml/general.svg)
+
+El diagrama reúne los diez tipos Java propios del proyecto: siete clases y tres interfaces. [Abrir UML general a tamaño completo](docs/uml/general.svg) · [Fuente editable PlantUML](docs/uml/general.puml).
 
 ### Patron Strategy
 
@@ -72,7 +78,7 @@ La torre solo conoce la interfaz `IObservador`, no la clase `Jugador`, por lo qu
 
 ![Diagrama UML del patron Observer](docs/uml/observer.svg)
 
-Las fuentes editables (`.puml`) y la documentacion de los diagramas estan en la carpeta `docs/uml/`.
+Los tres SVG se pueden ampliar sin perder nitidez. [Strategy a tamaño completo](docs/uml/strategy.svg) · [Observer a tamaño completo](docs/uml/observer.svg). Las fuentes editables y la descripción de las relaciones están en [docs/uml/](docs/uml/README.md).
 
 ---
 
