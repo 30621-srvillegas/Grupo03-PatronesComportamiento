@@ -1,5 +1,22 @@
-#Diagramas UML definitivos de Strategy y Observer
+# Diagramas UML del videojuego RPG
 
+## Diagrama general del código
+
+![Diagrama UML general](general.svg)
+
+El UML general representa los diez tipos Java declarados en `src`: siete clases y tres interfaces. `Principal` aparece una sola vez con todos sus atributos y métodos explícitos, conectando ambos paquetes. Los archivos `package-info.java` documentan paquetes y no declaran tipos adicionales. Las clases de biblioteca estándar (`Scanner`, `Map`, `List`, `Runnable`, etc.) se muestran en los tipos de los miembros, no como clases propias del proyecto.
+
+| Vista | Imagen SVG | Fuente editable |
+|---|---|---|
+| General | [general.svg](general.svg) | [general.puml](general.puml) |
+| Strategy | [strategy.svg](strategy.svg) | [strategy.puml](strategy.puml) |
+| Observer | [observer.svg](observer.svg) | [observer.puml](observer.puml) |
+
+**Legibilidad:** texto de miembros de 24 px y encabezados de 30 px en las imágenes SVG; separación amplia entre cajas, conectores diferenciados y lienzo vectorial ampliable. Las fuentes PlantUML conservan la estructura y ajustes de espaciado, aunque su distribución automática puede variar respecto a los SVG.
+
+**Notación:** `+` público, `-` privado, `{static}` miembro estático, `{readOnly}` campo final. Las multiplicidades se indican en el extremo destino: una estrategia activa, tres estrategias disponibles en el mapa inicial, una torre y cero o más jugadores/observadores. Las dependencias `«create»` representan la creación de las estrategias concretas en `Principal`. No se impone una multiplicidad inversa que el código no garantiza.
+
+**Versión contrastada:** `main`, commit `d9749cbbe9a783c0ddd7fb43623f965bfb311fe1`. Las vistas específicas muestran los miembros de `Principal` relevantes a cada patrón, mientras que la vista general incluye todos sus miembros declarados.
 
 ## Strategy: diagrama final integrado
 
@@ -19,7 +36,7 @@ Se representan las clases implementadas: `Principal`, `Personaje`, `IEstrategiaA
 
 Se representan `Principal`, `ISujeto`, `IObservador`, `TorreDeVigilancia` y `Jugador`.
 
-- `TorreDeVigilancia` **realiza** `ISujeto`, mantiene `observadores: List<IObservador>` y conserva una **agregación compartida 1 a 0..***: guarda referencias sin controlar el ciclo de vida de los observadores.
+- `TorreDeVigilancia` **realiza** `ISujeto`, mantiene `observadores: List<IObservador>` y conserva una **agregación compartida con 0..* observadores**: guarda referencias sin controlar el ciclo de vida de los observadores.
 - `Jugador` **realiza** `IObservador`, define `actualizar()` y en esa operación invoca `activarEscudo()`.
 - `ISujeto` **depende de** `IObservador` porque sus métodos de suscripción y desuscripción reciben esa interfaz como parámetro.
 - `Principal` mantiene `torre: TorreDeVigilancia` y `jugadoresSuscritos: List<Jugador>`, crea los jugadores, los suscribe o desuscribe, y llama `torre.detectarEnemigo()`.
