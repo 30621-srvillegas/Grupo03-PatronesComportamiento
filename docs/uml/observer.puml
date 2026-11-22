@@ -1,23 +1,36 @@
 @startuml
-title RPG - Observer: clases e integración real (EST-07)
-skinparam classAttributeIconSize 0
-skinparam shadowing false
 skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 22
+skinparam classFontSize 28
+skinparam classAttributeFontSize 22
+skinparam stereotypeFontSize 20
+skinparam nodesep 100
+skinparam ranksep 120
 skinparam classBackgroundColor #F8FAFC
 skinparam classBorderColor #334155
-skinparam ArrowColor #334155
-skinparam linetype ortho
+skinparam ArrowColor #475569
+skinparam linetype polyline
 hide circle
-left to right direction
-
+top to bottom direction
+title RPG - Observer
 class Principal <<integrador>> {
-  -jugadoresSuscritos: List<Jugador>
-  -torre: TorreDeVigilancia
+  -jugadoresSuscritos: List<Jugador> {readOnly}
+  -torre: TorreDeVigilancia {readOnly}
   +Principal()
   {static} +main(args: String[]): void
   -suscribirJugador(): void
   -desuscribirJugador(): void
   -detectarEnemigo(): void
+}
+class TorreDeVigilancia <<sujeto concreto>> {
+  -observadores: List<IObservador> {readOnly}
+  +suscribir(observador: IObservador): void
+  +desuscribir(observador: IObservador): void
+  +notificar(): void
+  +detectarEnemigo(): void
 }
 interface ISujeto {
   +suscribir(observador: IObservador): void
@@ -27,38 +40,17 @@ interface ISujeto {
 interface IObservador {
   +actualizar(): void
 }
-class TorreDeVigilancia <<sujeto concreto>> {
-  -observadores: List<IObservador>
-  +suscribir(observador: IObservador): void
-  +desuscribir(observador: IObservador): void
-  +notificar(): void
-  +detectarEnemigo(): void
-}
 class Jugador <<observador concreto>> {
-  -nombre: String
+  -nombre: String {readOnly}
   +Jugador(nombre: String)
   +getNombre(): String
   +actualizar(): void
   +activarEscudo(): void
 }
-
-Principal "1" --> "1" TorreDeVigilancia : torre
-Principal "1" --> "0..*" Jugador : jugadoresSuscritos
+Principal --> "1" TorreDeVigilancia : torre
+Principal --> "0..*" Jugador : jugadoresSuscritos
 TorreDeVigilancia ..|> ISujeto
 Jugador ..|> IObservador
 ISujeto ..> IObservador : parámetros
-TorreDeVigilancia "1" o--> "0..*" IObservador : observadores
-
-note bottom of Principal
-  Principal instancia Jugador y lo registra en torre;
-  mantiene su propia lista para desuscribir por índice.
-end note
-note bottom of TorreDeVigilancia
-  detectarEnemigo() invoca notificar().
-  notificar() recorre una copia de la lista
-  y ejecuta actualizar() en cada observador.
-end note
-note bottom of Jugador
-  actualizar() invoca activarEscudo().
-end note
+TorreDeVigilancia o--> "0..*" IObservador : observadores
 @enduml
