@@ -1,0 +1,32 @@
+@startuml
+title Casos de uso · vista general
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 26
+skinparam actorFontSize 28
+skinparam usecaseFontSize 26
+skinparam rectangleFontSize 28
+skinparam nodesep 100
+skinparam ranksep 120
+skinparam usecaseBackgroundColor #EAF1FB
+skinparam usecaseBorderColor #334155
+skinparam ArrowColor #475569
+actor "Usuario de consola" as U
+rectangle "Simulador RPG" {
+  usecase "Atacar\n(UC01 · opción 1)" as UC01
+  usecase "Cambiar arma\n(UC02 · opción 2)" as UC02
+  usecase "Suscribir jugador\na la torre\n(UC03 · opción 3)" as UC03
+  usecase "Desuscribir jugador\n(UC04 · opción 4)" as UC04
+  usecase "Detectar enemigo\n(UC05 · opción 5)" as UC05
+  usecase "Salir de la simulación\n(UC06 · opción 0)" as UC06
+}
+U -- UC01
+U -- UC02
+U -- UC03
+U -- UC04
+U -- UC05
+U -- UC06
+
+@enduml

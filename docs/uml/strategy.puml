@@ -1,26 +1,33 @@
 @startuml
-title RPG - Strategy: clases e integración real (EST-07)
-skinparam classAttributeIconSize 0
-skinparam shadowing false
 skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 22
+skinparam classFontSize 28
+skinparam classAttributeFontSize 22
+skinparam stereotypeFontSize 20
+skinparam nodesep 100
+skinparam ranksep 120
 skinparam classBackgroundColor #F8FAFC
 skinparam classBorderColor #334155
-skinparam ArrowColor #334155
-skinparam linetype ortho
+skinparam ArrowColor #475569
+skinparam linetype polyline
 hide circle
-left to right direction
-
+top to bottom direction
+title RPG - Strategy
 class Principal <<integrador>> {
-  -armasDisponibles: Map<Integer, IEstrategiaAtaque>
-  -acciones: Map<Integer, Runnable>
-  -personaje: Personaje
+  -armasDisponibles: Map<Integer, IEstrategiaAtaque> {readOnly}
+  -acciones: Map<Integer, Runnable> {readOnly}
+  -personaje: Personaje {readOnly}
   +Principal()
   {static} +main(args: String[]): void
   -iniciar(): void
+  -mostrarMenu(): void
   -cambiarArma(): void
 }
 class Personaje <<contexto>> {
-  -nombre: String
+  -nombre: String {readOnly}
   -arma: IEstrategiaAtaque
   +Personaje(nombre: String, armaInicial: IEstrategiaAtaque)
   +setArma(nuevaArma: IEstrategiaAtaque): void
@@ -39,22 +46,13 @@ class AtaqueFuego {
 class AtaqueHielo {
   +atacar(nombreAtacante: String): void
 }
-
-Principal "1" --> "1" Personaje : personaje
-Principal "1" --> "0..*" IEstrategiaAtaque : armasDisponibles (valores del Map)
-Personaje "1" --> "1" IEstrategiaAtaque : arma activa
+Principal --> "1" Personaje : personaje
+Principal --> "3" IEstrategiaAtaque : armasDisponibles
+Personaje --> "1" IEstrategiaAtaque : arma activa
 AtaqueEspada ..|> IEstrategiaAtaque
 AtaqueFuego ..|> IEstrategiaAtaque
 AtaqueHielo ..|> IEstrategiaAtaque
-
-note bottom of Principal
-  Principal crea AtaqueEspada, AtaqueFuego y AtaqueHielo.
-  Cambiar arma usa el Map, valida la selección
-  y llama personaje.setArma(armaElegida).
-  El mapa acciones usa Runnable para despachar el menú.
-end note
-note bottom of Personaje
-  atacar() delega en arma.atacar(nombre).
-  No contiene switch/if de tipos de ataque.
-end note
+Principal ..> AtaqueEspada : <<create>>
+Principal ..> AtaqueFuego : <<create>>
+Principal ..> AtaqueHielo : <<create>>
 @enduml

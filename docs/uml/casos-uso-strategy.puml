@@ -1,0 +1,25 @@
+@startuml
+title Casos de uso · Strategy
+left to right direction
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 26
+skinparam actorFontSize 28
+skinparam usecaseFontSize 26
+skinparam rectangleFontSize 28
+skinparam nodesep 100
+skinparam ranksep 120
+skinparam usecaseBackgroundColor #EAF1FB
+skinparam usecaseBorderColor #334155
+skinparam ArrowColor #475569
+actor "Usuario de consola" as U
+rectangle "Simulador RPG · vista Strategy" {
+  usecase "Atacar\n(UC01 · opción 1)" as UC01
+  usecase "Cambiar arma\n(UC02 · opción 2)" as UC02
+  usecase "Seleccionar arma\ndisponible\n(UC02A)" as UC02A
+}
+U -- UC01
+U -- UC02
+UC02 ..> UC02A : <<include>>
+@enduml

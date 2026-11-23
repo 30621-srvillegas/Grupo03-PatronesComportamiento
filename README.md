@@ -62,7 +62,13 @@ La torre solo conoce la interfaz `IObservador`, no la clase `Jugador`, por lo qu
 
 ---
 
-## Diagrama UML
+## Diagramas UML
+
+### Diagrama general del proyecto
+
+![Diagrama UML general del RPG](docs/uml/general.svg)
+
+El diagrama reúne los diez tipos Java propios del proyecto: siete clases y tres interfaces. [Abrir UML general a tamaño completo](docs/uml/general.svg) · [Fuente editable PlantUML](docs/uml/general.puml).
 
 ### Patron Strategy
 
@@ -72,7 +78,24 @@ La torre solo conoce la interfaz `IObservador`, no la clase `Jugador`, por lo qu
 
 ![Diagrama UML del patron Observer](docs/uml/observer.svg)
 
-Las fuentes editables (`.puml`) y la documentacion de los diagramas estan en la carpeta `docs/uml/`.
+Los tres SVG se pueden ampliar sin perder nitidez. [Strategy a tamaño completo](docs/uml/strategy.svg) · [Observer a tamaño completo](docs/uml/observer.svg). Las fuentes editables y la descripción de las relaciones están en [docs/uml/](docs/uml/README.md).
+
+---
+
+## Diagramas de casos de uso
+
+Los casos de uso muestran las funciones disponibles para el **usuario de consola**, el único actor externo del simulador, a diferencia de los diagramas de clases que describen su estructura interna.
+
+### Vista general
+
+![Diagrama general de casos de uso](docs/uml/casos-uso-general.svg)
+
+### Vistas específicas por patrón
+
+- [Casos de uso de Strategy](docs/uml/casos-uso-strategy.svg): atacar y cambiar arma.
+- [Casos de uso de Observer](docs/uml/casos-uso-observer.svg): suscribir, desuscribir y detectar enemigo; notificación incluida.
+
+Las imágenes SVG, las fuentes PlantUML editables y la correspondencia con las opciones de `Principal.java` se encuentran en [la documentación UML](docs/uml/README.md#diagramas-de-casos-de-uso).
 
 ---
 

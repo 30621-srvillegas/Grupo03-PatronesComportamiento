@@ -1,0 +1,99 @@
+@startuml
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultFontName Arial
+skinparam defaultFontSize 22
+skinparam classFontSize 28
+skinparam classAttributeFontSize 22
+skinparam stereotypeFontSize 20
+skinparam nodesep 100
+skinparam ranksep 120
+skinparam classBackgroundColor #F8FAFC
+skinparam classBorderColor #334155
+skinparam ArrowColor #475569
+skinparam linetype polyline
+hide circle
+top to bottom direction
+title RPG - Diagrama general de clases
+class Principal <<integrador>> {
+  {static} -OPCION_SALIR: int = 0 {readOnly}
+  -scanner: Scanner {readOnly}
+  -armasDisponibles: Map<Integer, IEstrategiaAtaque> {readOnly}
+  -acciones: Map<Integer, Runnable> {readOnly}
+  -jugadoresSuscritos: List<Jugador> {readOnly}
+  -torre: TorreDeVigilancia {readOnly}
+  -personaje: Personaje {readOnly}
+  +Principal()
+  {static} +main(args: String[]): void
+  -iniciar(): void
+  -mostrarMenu(): void
+  -cambiarArma(): void
+  -suscribirJugador(): void
+  -desuscribirJugador(): void
+  -detectarEnemigo(): void
+  -leerEntero(mensaje: String): int
+  -leerTexto(mensaje: String): String
+}
+package strategy {
+class Personaje <<contexto>> {
+  -nombre: String {readOnly}
+  -arma: IEstrategiaAtaque
+  +Personaje(nombre: String, armaInicial: IEstrategiaAtaque)
+  +setArma(nuevaArma: IEstrategiaAtaque): void
+  +atacar(): void
+  +getNombre(): String
+}
+interface IEstrategiaAtaque {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueEspada {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueFuego {
+  +atacar(nombreAtacante: String): void
+}
+class AtaqueHielo {
+  +atacar(nombreAtacante: String): void
+}
+}
+package observer {
+class TorreDeVigilancia <<sujeto concreto>> {
+  -observadores: List<IObservador> {readOnly}
+  +suscribir(observador: IObservador): void
+  +desuscribir(observador: IObservador): void
+  +notificar(): void
+  +detectarEnemigo(): void
+}
+interface ISujeto {
+  +suscribir(observador: IObservador): void
+  +desuscribir(observador: IObservador): void
+  +notificar(): void
+}
+interface IObservador {
+  +actualizar(): void
+}
+class Jugador <<observador concreto>> {
+  -nombre: String {readOnly}
+  +Jugador(nombre: String)
+  +getNombre(): String
+  +actualizar(): void
+  +activarEscudo(): void
+}
+}
+Principal --> "1" Personaje : personaje
+Principal --> "3" IEstrategiaAtaque : armasDisponibles
+Personaje --> "1" IEstrategiaAtaque : arma activa
+AtaqueEspada ..|> IEstrategiaAtaque
+AtaqueFuego ..|> IEstrategiaAtaque
+AtaqueHielo ..|> IEstrategiaAtaque
+Principal ..> AtaqueEspada : <<create>>
+Principal ..> AtaqueFuego : <<create>>
+Principal ..> AtaqueHielo : <<create>>
+Principal --> "1" TorreDeVigilancia : torre
+Principal --> "0..*" Jugador : jugadoresSuscritos
+TorreDeVigilancia ..|> ISujeto
+Jugador ..|> IObservador
+ISujeto ..> IObservador : parámetros
+TorreDeVigilancia o--> "0..*" IObservador : observadores
+@enduml
